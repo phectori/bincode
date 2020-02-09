@@ -48,9 +48,9 @@ impl<'de, R: BincodeRead<'de>, O: Options> Deserializer<R, O> {
     }
 
     fn read_vec(&mut self) -> Result<Vec<u8>> {
-        let len: usize = serde::Deserialize::deserialize(&mut *self)?;
+        let len: u8 = serde::Deserialize::deserialize(&mut *self)?;
         self.read_bytes(len as u64)?;
-        self.reader.get_byte_buffer(len)
+        self.reader.get_byte_buffer(len as usize)
     }
 
     fn read_string(&mut self) -> Result<String> {
@@ -173,9 +173,9 @@ where
     where
         V: serde::de::Visitor<'de>,
     {
-        let len: usize = serde::Deserialize::deserialize(&mut *self)?;
+        let len: u8 = serde::Deserialize::deserialize(&mut *self)?;
         self.read_bytes(len as u64)?;
-        self.reader.forward_read_str(len, visitor)
+        self.reader.forward_read_str(len as usize, visitor)
     }
 
     fn deserialize_string<V>(self, visitor: V) -> Result<V::Value>
@@ -189,9 +189,9 @@ where
     where
         V: serde::de::Visitor<'de>,
     {
-        let len: usize = serde::Deserialize::deserialize(&mut *self)?;
+        let len: u8 = serde::Deserialize::deserialize(&mut *self)?;
         self.read_bytes(len as u64)?;
-        self.reader.forward_read_bytes(len, visitor)
+        self.reader.forward_read_bytes(len as usize, visitor)
     }
 
     fn deserialize_byte_buf<V>(self, visitor: V) -> Result<V::Value>
@@ -288,9 +288,9 @@ where
     where
         V: serde::de::Visitor<'de>,
     {
-        let len = serde::Deserialize::deserialize(&mut *self)?;
+        let len: u8 = serde::Deserialize::deserialize(&mut *self)?;
 
-        self.deserialize_tuple(len, visitor)
+        self.deserialize_tuple(len as usize, visitor)
     }
 
     fn deserialize_map<V>(self, visitor: V) -> Result<V::Value>
