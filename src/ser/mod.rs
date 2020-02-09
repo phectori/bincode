@@ -107,7 +107,7 @@ impl<'a, W: Write, O: Options> serde::Serializer for &'a mut Serializer<W, O> {
     }
 
     fn serialize_str(self, v: &str) -> Result<()> {
-        self.serialize_u64(v.len() as u64)?;
+        self.serialize_u8(v.len() as u8)?;
         self.writer.write_all(v.as_bytes()).map_err(Into::into)
     }
 
@@ -118,7 +118,7 @@ impl<'a, W: Write, O: Options> serde::Serializer for &'a mut Serializer<W, O> {
     }
 
     fn serialize_bytes(self, v: &[u8]) -> Result<()> {
-        self.serialize_u64(v.len() as u64)?;
+        self.serialize_u8(v.len() as u8)?;
         self.writer.write_all(v).map_err(Into::into)
     }
 
@@ -136,7 +136,7 @@ impl<'a, W: Write, O: Options> serde::Serializer for &'a mut Serializer<W, O> {
 
     fn serialize_seq(self, len: Option<usize>) -> Result<Self::SerializeSeq> {
         let len = len.ok_or(ErrorKind::SequenceMustHaveLength)?;
-        self.serialize_u64(len as u64)?;
+        self.serialize_u8(len as u8)?;
         Ok(Compound { ser: self })
     }
 
